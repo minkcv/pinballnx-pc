@@ -7,13 +7,21 @@ PinballNX is a pinball game for Windows made in C++ with SFML and Box2D.
 Controls:
 
 Space: Start/Pause
+
 Left, Right Shift: Flippers
+
 Down Arrow: Plunger
+
 Z, / : Tilt
+
 N: New Game
+
 M: Mute
+
 R: Rotate Graphics
+
 F: Enter/Exit Fullscreen
+
 Escape: Quit
 
 ## Credits

@@ -216,7 +216,7 @@ int main(int argc, char **argv) {
             world.Step(timeStep, velocityIterations, positionIterations);
         }
         table.updateScoreboard(paused);
-
+		g_sound->update();
 		render(window, root);
     }
 

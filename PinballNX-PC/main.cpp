@@ -83,19 +83,16 @@ int main(int argc, char **argv) {
     bool pauseReleased = true;
 	bool focused = true;
     // main loop
-    while (true) {
+    while (window->isOpen()) {
 		Event event;
-
-		// Without setting event, it can be unset and be a close event
-		// This is a very intermittent bug and I don't know why it's happening.
-		event.type = Event::EventType::GainedFocus;
-		window->pollEvent(event);
-		if (event.type == Event::LostFocus)
-			focused = false;
-		if (event.type == Event::GainedFocus)
-			focused = true;
-		if (event.type == Event::Closed)
-			break;
+		while (window->pollEvent(event)) {
+			if (event.type == Event::LostFocus)
+				focused = false;
+			if (event.type == Event::GainedFocus)
+				focused = true;
+			if (event.type == Event::Closed)
+				window->close();
+		}
 		if (!focused) {
 			continue;
 		}

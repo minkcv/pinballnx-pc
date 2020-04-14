@@ -70,7 +70,7 @@ b2Fixture* BallLock::getFixture() {
 }
 
 void BallLock::trigger() {
-    if (m_multi) {
+    if (m_multi && m_locked < m_capacity) {
         m_move = 1;
     }
 }

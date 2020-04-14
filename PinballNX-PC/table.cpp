@@ -244,26 +244,19 @@ Table::Table(SceneElement* root, b2World& world) :
     Pinball* firstPinball = new Pinball(root, &world);
     m_pinballs.push_back(firstPinball);
 
-	m_lockSound = new SoundBuffer();
-	m_lockSound->loadFromFile("data/bumper2.wav");
+	m_lockSoundId = g_sound->getId("bumper2");
 
-	m_lockSound2 = new SoundBuffer();
-	m_lockSound2->loadFromFile("data/lock.wav");
+	m_lockSound2Id = g_sound->getId("lock");
 
-	m_lockSound3 = new SoundBuffer();
-	m_lockSound3->loadFromFile("data/lockup.wav");
+	m_lockSound3Id = g_sound->getId("lockup");
 
-	m_extraSound = new SoundBuffer();
-	m_extraSound->loadFromFile("data/extra.wav");
+	m_extraSoundId = g_sound->getId("extra");
 
-	m_jackpotSound= new SoundBuffer();
-	m_jackpotSound->loadFromFile("data/jackpot.wav");
+	m_jackpotSoundId = g_sound->getId("jackpot");
 
-	m_multiSound = new SoundBuffer();
-	m_multiSound->loadFromFile("data/multi.wav");
+	m_multiSoundId = g_sound->getId("multi");
 
-	m_outSound = new SoundBuffer();
-	m_outSound->loadFromFile("data/out.wav");
+	m_outSoundId = g_sound->getId("out");
 	m_outPlayed = false;
 
 	RectangleShape* rect = new RectangleShape();
@@ -276,13 +269,6 @@ Table::Table(SceneElement* root, b2World& world) :
 }
 
 void Table::update() {
-	for (size_t i = 0; i < m_sounds.size(); i++) {
-		if (m_sounds.at(i)->getStatus() == SoundSource::Status::Stopped) {
-			Sound* sound = m_sounds.at(i);
-			m_sounds.erase(m_sounds.begin() + i);
-			delete sound;
-		}
-	}
     // Some useful debug code:
     //b2Body* body = m_b2world->GetBodyList();
     //int numBodies = 0;
@@ -316,11 +302,8 @@ void Table::update() {
             m_announce = "";
             m_announceFlash = "";
             m_announceTime = 0;
-			if (!m_outPlayed && !g_muted) {
-				Sound* sound = new Sound();
-				sound->setBuffer(*m_outSound);
-				sound->play();
-				m_sounds.push_back(sound);
+			if (!m_outPlayed) {
+				g_sound->playSound(m_outSoundId);
 			}
 			if (m_currentBall < m_maxBalls + 1) {
 				Pinball* nextPinball = new Pinball(m_root, m_b2world);
@@ -385,12 +368,7 @@ void Table::update() {
                 m_lockBallLocations.erase(m_lockBallLocations.begin() + i);
                 b2Vec2 vec = lockBallRelease->getStartVelocity(iSpawnPos);
                 lockBallRelease->getBody()->ApplyForce(vec, lockBallRelease->getBody()->GetWorldVector(b2Vec2(0, 0)), true);
-				if (!g_muted) {
-					Sound* sound = new Sound();
-					sound->setBuffer(*m_lockSound3);
-					sound->play();
-					m_sounds.push_back(sound);
-				}
+				g_sound->playSound(m_lockSound3Id);
                 break;
             }
         }
@@ -530,12 +508,7 @@ void Table::BeginContact(b2Contact* contact) {
                     m_announceTime = 200;
                     // Close the underlayer ramp
                     m_optWalls.at(1)->enable();
-					if (!g_muted) {
-						Sound* sound = new Sound();
-						sound->setBuffer(*m_extraSound);
-						sound->play();
-						m_sounds.push_back(sound);
-					}
+					g_sound->playSound(m_extraSoundId);
                 }
                 else {
                     ballLock->trigger();
@@ -543,22 +516,12 @@ void Table::BeginContact(b2Contact* contact) {
                 m_score += 20000;
                 if (b == 5) {
                     m_optWalls.at(2)->disable();
-					if (!g_muted) {
-						Sound* sound = new Sound();
-						sound->setBuffer(*m_lockSound);
-						sound->play();
-						m_sounds.push_back(sound);
-					}
+					g_sound->playSound(m_lockSoundId);
                 }
                 else if (b == 4) {
                     // Close the underlayer ramp
                     m_optWalls.at(1)->enable();
-					if (!g_muted) {
-						Sound* sound = new Sound();
-						sound->setBuffer(*m_lockSound);
-						sound->play();
-						m_sounds.push_back(sound);
-					}
+					g_sound->playSound(m_lockSoundId);
                 }
                 else if (b == 0) {
                     m_announce = "BALL LOCKED";
@@ -566,12 +529,7 @@ void Table::BeginContact(b2Contact* contact) {
                     m_announceTime = 200;
                     m_optWalls.at(5)->enable();
                     m_optWalls.at(8)->disable();
-					if (!g_muted) {
-						Sound* sound = new Sound();
-						sound->setBuffer(*m_lockSound2);
-						sound->play();
-						m_sounds.push_back(sound);
-					}
+					g_sound->playSound(m_lockSound2Id);
                 }
                 else if (b == 7) {
                     m_announce = "JACKPOT "  + std::to_string(m_jackpotValue / 1000000) + "M";
@@ -581,20 +539,10 @@ void Table::BeginContact(b2Contact* contact) {
                     m_jackpotValue = 1000000;
                     // Close the underlayer ramp
                     m_optWalls.at(1)->enable();
-					if (!g_muted) {
-						Sound* sound = new Sound();
-						sound->setBuffer(*m_jackpotSound);
-						sound->play();
-						m_sounds.push_back(sound);
-					}
+					g_sound->playSound(m_jackpotSoundId);
                 }
 				else {
-					if (!g_muted) {
-						Sound* sound = new Sound();
-						sound->setBuffer(*m_lockSound);
-						sound->play();
-						m_sounds.push_back(sound);
-					}
+					g_sound->playSound(m_lockSoundId);
 				}
             }
         }
@@ -692,12 +640,7 @@ void Table::BeginContact(b2Contact* contact) {
                                 m_multiCreate = 3;
                                 m_multiTimer = 0; // Create one right away
 
-								if (!g_muted) {
-									Sound* sound = new Sound();
-									sound->setBuffer(*m_multiSound);
-									sound->play();
-									m_sounds.push_back(sound);
-								}
+								g_sound->playSound(m_multiSoundId);
                             }
                         }
                     }

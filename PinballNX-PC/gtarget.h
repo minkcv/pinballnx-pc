@@ -27,8 +27,7 @@ class GTarget {
         vector<bool> m_isPressed;
         vector<int> m_dropTimers;
         int m_dropTime = 10;
-		SoundBuffer* m_sound;
-		vector<Sound*> m_sounds;
+		int m_soundId;
         vector<SceneElement*> m_eltsEnabled;
         vector<SceneElement*> m_eltsDisabled;
         int m_hitFrames = 32 * g_displayFrameRate / 60;

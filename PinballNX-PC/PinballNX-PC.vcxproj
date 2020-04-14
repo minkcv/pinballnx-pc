@@ -143,6 +143,7 @@
     <ClCompile Include="ramp.cpp" />
     <ClCompile Include="SceneElement.cpp" />
     <ClCompile Include="scoreboard.cpp" />
+    <ClCompile Include="SoundM.cpp" />
     <ClCompile Include="spinner.cpp" />
     <ClCompile Include="table.cpp" />
     <ClCompile Include="trigger.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="ramp.h" />
     <ClInclude Include="SceneElement.h" />
     <ClInclude Include="scoreboard.h" />
+    <ClInclude Include="SoundM.h" />
     <ClInclude Include="spinner.h" />
     <ClInclude Include="table.h" />
     <ClInclude Include="trigger.h" />

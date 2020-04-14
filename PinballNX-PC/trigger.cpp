@@ -10,8 +10,7 @@ Trigger::Trigger(SceneElement* root, b2World& world, int triggerID, int layerID,
     m_wallsToChange.push_back(wall2);
     m_wallsToChange.push_back(wall3);
     m_wallsToChange.push_back(wall4);
-	m_sound = new SoundBuffer();
-	m_sound->loadFromFile("data/trigger.wav");
+	m_soundId = g_sound->getId("trigger");
 
     vector<float> points = m_triggerShapes.at(triggerID);
 
@@ -63,13 +62,6 @@ b2Fixture* Trigger::getFixture() {
 }
 
 void Trigger::update() {
-	for (size_t i = 0; i < m_sounds.size(); i++) {
-		if (m_sounds.at(i)->getStatus() == SoundSource::Status::Stopped) {
-			Sound* sound = m_sounds.at(i);
-			m_sounds.erase(m_sounds.begin() + i);
-			delete sound;
-		}
-	}
     if (m_timer == 0) {
         m_timer = -1;
             // Re enable and change graphics
@@ -105,12 +97,7 @@ void Trigger::update() {
 void Trigger::press() {
     if (m_isPressed)
         return;
-	if (!g_muted) {
-		Sound* sound = new Sound();
-		sound->setBuffer(*m_sound);
-		sound->play();
-		m_sounds.push_back(sound);
-	}
+	g_sound->playSound(m_soundId);
     // Start a cooldown before we can be pressed again
     m_hitFrameCurrent = 0;
     m_timer = m_delay;

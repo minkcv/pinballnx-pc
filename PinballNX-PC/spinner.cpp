@@ -2,10 +2,8 @@
 
 Spinner::Spinner(SceneElement* root, b2World& world, int layerID, int spinnerID) {
     m_layerID = layerID;
-	m_sound = new SoundBuffer();
-	m_sound->loadFromFile("data/spinner.wav");
-	m_playing = new Sound();
-	m_playing->setBuffer(*m_sound);
+	m_soundId = g_sound->getId("spinner");
+	m_playing = nullptr;
 
     float startX = m_positions.at(spinnerID * 2);
     float startY = m_positions.at(spinnerID * 2 + 1);
@@ -50,14 +48,18 @@ Spinner::Spinner(SceneElement* root, b2World& world, int layerID, int spinnerID)
 }
 
 void Spinner::update() {
-	if (m_push != 0 && !g_muted) {
-		m_playing->setLoop(true);
-		m_playing->setPitch(abs(m_push / 400.0));
-		if (m_playing->getStatus() != SoundSource::Status::Playing)
-			m_playing->play();
+	if (m_push != 0) {
+		if (m_playing == nullptr || m_playing->getStatus() != SoundSource::Status::Playing)
+			m_playing = g_sound->playSound(m_soundId);
+		if (m_playing != nullptr) {
+			m_playing->setLoop(true);
+			m_playing->setPitch(abs(m_push / 400.0));
+		}
 	}
-	else
-		m_playing->stop();
+	else {
+		if (m_playing != nullptr)
+			m_playing->stop();
+	}
     if (m_push > 0) {
         m_push -= ceil(m_push + 1) / 10;
         m_frameDuration = 2 * g_displayFrameRate / (m_push);

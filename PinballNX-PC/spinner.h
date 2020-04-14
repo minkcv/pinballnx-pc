@@ -21,7 +21,7 @@ class Spinner {
     private:
         int m_layerID;
         int m_push = 0;
-		SoundBuffer* m_sound;
+		int m_soundId;
 		Sound* m_playing;
         b2Fixture* m_fixture;
         b2Body* m_body;

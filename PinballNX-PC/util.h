@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "SoundM.h"
 
 #define DEBUG 0
 
@@ -25,7 +26,7 @@ extern float g_displayFrameRate;
 // 1280 meters long. 
 extern float g_graphicsScale;
 
-extern bool g_muted;
+extern SoundM* g_sound;
 
 b2Vec2* getVertexArray(std::vector<float> points, float xOffset = 0, float yOffset = 0);
 

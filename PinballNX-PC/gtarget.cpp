@@ -4,11 +4,10 @@ GTarget::GTarget(SceneElement* root, b2World& world, int targetGroupID, int laye
     m_layerID = layerID;
     m_collide = collide;
     m_dontReset = dontReset;
-	m_sound = new SoundBuffer();
 	if (collide)
-		m_sound->loadFromFile("data/gtarget1.wav");
+		m_soundId = g_sound->getId("gtarget1");
 	else
-		m_sound->loadFromFile("data/gtarget2.wav");
+		m_soundId = g_sound->getId("gtarget2");
     vector<vector<float>> shapes = m_targetGroups.at(targetGroupID);
     for (size_t s = 0; s < shapes.size(); s++) {
         vector<float> points = shapes.at(s);
@@ -68,13 +67,6 @@ GTarget::GTarget(SceneElement* root, b2World& world, int targetGroupID, int laye
 }
 
 void GTarget::update() {
-	for (size_t i = 0; i < m_sounds.size(); i++) {
-		if (m_sounds.at(i)->getStatus() == SoundSource::Status::Stopped) {
-			Sound* sound = m_sounds.at(i);
-			m_sounds.erase(m_sounds.begin() + i);
-			delete sound;
-		}
-	}
     if (m_frameCurrent < m_hitFrames) {
         m_frameCurrent++;
     }
@@ -100,12 +92,7 @@ vector<b2Fixture*> GTarget::getFixtures() {
 }
 
 bool GTarget::press(size_t targetID) {
-	Sound* sound = new Sound();
-	sound->setBuffer(*m_sound);
-	if (!g_muted) {
-		sound->play();
-		m_sounds.push_back(sound);
-	}
+	g_sound->playSound(m_soundId);
     m_isPressed[targetID] = true;
     if (m_collide)
         m_dropTimers[targetID] = m_dropTime;

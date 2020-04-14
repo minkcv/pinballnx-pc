@@ -63,15 +63,14 @@ class Table : public b2ContactListener {
         Flipper m_rightFlipper2;
         Plunger m_plunger;
         SceneElement* m_root;
-		SoundBuffer* m_lockSound;
-		SoundBuffer* m_lockSound2;
-		SoundBuffer* m_lockSound3;
-		SoundBuffer* m_extraSound;
-		SoundBuffer* m_jackpotSound;
-		SoundBuffer* m_multiSound;
-		SoundBuffer* m_outSound;
+		int m_lockSoundId;
+		int m_lockSound2Id;
+		int m_lockSound3Id;
+		int m_extraSoundId;
+		int m_jackpotSoundId;
+		int m_multiSoundId;
+		int m_outSoundId;
 		bool m_outPlayed;
-		vector<Sound*> m_sounds;
         // The width of the table, which is the height of the screen.
         float m_width = 720;
         // The height of the table, which is the width of the screen.

@@ -37,8 +37,7 @@ class Bumper {
         int m_flashFrameCurrent = m_flashFrames;
         int m_lockDelay = 16;
         int m_lockDelayCurrent = m_lockDelay + 1;
-		SoundBuffer* m_sound;
-		vector<Sound*> m_sounds;
+		int m_soundId;
         vector<float> m_leftCenterUpper = {200, 0};
         vector<float> m_leftCenterLower = {120, 0};
         vector<float> m_rightCenterUpper = {200, 720};

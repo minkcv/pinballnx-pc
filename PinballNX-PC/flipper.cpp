@@ -1,14 +1,8 @@
 #include "flipper.h"
 
 Flipper::Flipper(SceneElement* root, b2World& world, int flipperID) {
-	m_flipSound = new SoundBuffer();
-	m_flipSound->loadFromFile("data/flip.wav");
-	m_sound = new Sound();
-	m_sound->setBuffer(*m_flipSound);
-	m_flipSound2 = new SoundBuffer();
-	m_flipSound2->loadFromFile("data/flip2.wav");
-	m_sound2 = new Sound();
-	m_sound2->setBuffer(*m_flipSound2);
+	m_sound1Id = g_sound->getId("flip");
+	m_sound2Id = g_sound->getId("flip2");
     float yOffset = flipperID ? 0.02: -0.02;
     if (flipperID % 2 == 0) {
         m_key = Keyboard::LShift;
@@ -113,8 +107,7 @@ void Flipper::update() {
         
     if (Keyboard::isKeyPressed(m_key)) {
 		if (!m_keyDown) {
-			if (!g_muted)
-				m_sound->play();
+			g_sound->playSound(m_sound1Id);
 		}
         m_joint->SetMotorSpeed(-20.0f * m_rotateDirection);
 		m_keyDown = true;
@@ -122,8 +115,7 @@ void Flipper::update() {
     else {
         m_joint->SetMotorSpeed(20.0f * m_rotateDirection);
 		if (m_keyDown) {
-			if (!g_muted)
-				m_sound2->play();
+			g_sound->playSound(m_sound2Id);
 		}
 		m_keyDown = false;
     }

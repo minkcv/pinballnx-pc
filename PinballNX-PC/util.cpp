@@ -4,7 +4,7 @@ float g_graphicsScale = 100.0f;
 
 float g_displayFrameRate = 60;
 
-bool g_muted = false;
+SoundM* g_sound = new SoundM();
 
 b2Vec2* getVertexArray(std::vector<float> points, float xOffset, float yOffset) {
     b2Vec2* vs = (b2Vec2*)malloc(sizeof(b2Vec2) * points.size() / 2);

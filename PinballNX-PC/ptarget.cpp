@@ -5,10 +5,8 @@ PTarget::PTarget(SceneElement* root, b2World& world, int targetGroupID, int laye
     m_flashTimer = 0;
     m_currentTarget = 0;
     m_frame = 0;
-	m_sound1 = new SoundBuffer();
-	m_sound1->loadFromFile("data/ptarget1.wav");
-	m_sound2 = new SoundBuffer();
-	m_sound2->loadFromFile("data/ptarget2.wav");
+	m_soundId1 = g_sound->getId("ptarget1");
+	m_soundId2 = g_sound->getId("ptarget2");
 
     vector<vector<float>> shapes = m_targetGroups.at(targetGroupID);
     for (size_t s = 0; s < shapes.size(); s++) {
@@ -64,13 +62,6 @@ vector<b2Fixture*> PTarget::getFixtures() {
 }
 
 void PTarget::update() {
-	for (size_t i = 0; i < m_sounds.size(); i++) {
-		if (m_sounds.at(i)->getStatus() == SoundSource::Status::Stopped) {
-			Sound* sound = m_sounds.at(i);
-			m_sounds.erase(m_sounds.begin() + i);
-			delete sound;
-		}
-	}
     if (m_flashTimer < m_flashFrames)
         m_flashTimer++;
     else if (m_flashTimer == m_flashFrames) {
@@ -107,20 +98,10 @@ bool PTarget::press(size_t targetID) {
         m_currentTarget++;
         if (m_currentTarget == m_fixtures.size()) {
             m_currentTarget = 0;
-			if (!g_muted) {
-				Sound* sound = new Sound();
-				sound->setBuffer(*m_sound2);
-				sound->play();
-				m_sounds.push_back(sound);
-			}
+			g_sound->playSound(m_soundId2);
         }
 		else {
-			if (!g_muted) {
-				Sound* sound = new Sound();
-				sound->setBuffer(*m_sound1);
-				sound->play();
-				m_sounds.push_back(sound);
-			}
+			g_sound->playSound(m_soundId1);
 		}
     }
     return m_currentTarget == 0;

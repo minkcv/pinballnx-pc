@@ -1,10 +1,7 @@
 #include "wheel.h"
 
 Wheel::Wheel(SceneElement* root, b2World& world, int wheelID) {
-	m_sound = new SoundBuffer();
-	m_sound->loadFromFile("data/wheel.wav");
-	m_playing = new Sound();
-	m_playing->setBuffer(*m_sound);
+	m_soundId = g_sound->getId("wheel");
 
     m_radius = m_radii.at(wheelID);
     m_x = m_positions.at(wheelID * 2);
@@ -116,8 +113,8 @@ void Wheel::update() {
         m_sectionChanged = true;
     else
         m_sectionChanged = false;
-	if (m_sectionChanged && !g_muted) {
-		m_playing->play();
+	if (m_sectionChanged) {
+		g_sound->playSound(m_soundId);
 	}
     m_anglePrev = angle;
 }

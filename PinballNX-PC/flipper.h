@@ -28,10 +28,8 @@ class Flipper {
         float m_upperLimit = M_PI / 8;
         float m_x;
         float m_y;
-		SoundBuffer* m_flipSound;
-		Sound* m_sound;
-		SoundBuffer* m_flipSound2;
-		Sound* m_sound2;
+		int m_sound1Id;
+		int m_sound2Id;
         vector<float> m_leftPoints = {-16, 0, -10, 93, -6, 99, -2.5, 100, 2.5, 100, 6, 99, 10, 93, 16, 0};
         vector<float> m_rightPoints = {-16, 0, -10, -93, -6, -99, -2.5, -100, 2.5, -100, 6, -99, 10, -93, 16, 0};
         vector<float> m_positions = {

@@ -84,8 +84,9 @@ int main(int argc, char **argv) {
 	bool focused = true;
     // main loop
     while (true) {
-		sf::Event event;
+		Event event;
 		window->pollEvent(event);
+
 		if (event.type == Event::LostFocus)
 			focused = false;
 		if (event.type == Event::GainedFocus)
@@ -104,12 +105,12 @@ int main(int argc, char **argv) {
         }
 		if (Keyboard::isKeyPressed(Keyboard::M)) {
 			if (mReleased)
-				g_muted = !g_muted;
+				g_sound->toggleMute();
 			mReleased = false;
 		}
 		else
 			mReleased = true;
-
+		
 		if (Keyboard::isKeyPressed(Keyboard::R)) {
 			if (rReleased) {
 				rotate = !rotate;
@@ -144,13 +145,13 @@ int main(int argc, char **argv) {
 					rootSF->setPosition(0, 0);
 					rootSF->setRotation(0.0);
 				}
-					window->setFramerateLimit(g_displayFrameRate);
+				window->setFramerateLimit(g_displayFrameRate);
 			}
 			rReleased = false;
 		}
 		else
 			rReleased = true;
-
+		
 		if (Keyboard::isKeyPressed(Keyboard::F)) {
 			if (fReleased) {
 				fullscreen = !fullscreen;
@@ -188,7 +189,6 @@ int main(int argc, char **argv) {
 						rootSF->setRotation(0.0);
 						rootSF->setPosition(0, 0);
 					}
-					
 				}
 				window->setFramerateLimit(g_displayFrameRate);
 			}
@@ -196,6 +196,7 @@ int main(int argc, char **argv) {
 		}
 		else
 			fReleased = true;
+		
         if (Keyboard::isKeyPressed(Keyboard::Space)) {
             if (pauseReleased) {
                 if (paused)
@@ -209,7 +210,7 @@ int main(int argc, char **argv) {
         else {
             pauseReleased = true;
         }
-
+		
         if (!paused) {
             table.update();
             world.Step(timeStep, velocityIterations, positionIterations);

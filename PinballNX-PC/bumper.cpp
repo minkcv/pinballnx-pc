@@ -7,9 +7,8 @@ Bumper::Bumper(SceneElement* root, b2World& world, int layerID, int shapeID, flo
     string activeTextureName;
     m_bumpForce = 10.0 * g_displayFrameRate / 60;
     m_optwall = optwall;
-	m_sound = new SoundBuffer();
     if (shapeID == -1) {
-		m_sound->loadFromFile("data/bumper1.wav");
+		m_soundId = g_sound->getId("bumper1");
         inactiveTextureName = "data/bumper1.png";
         activeTextureName = "data/bumper2.png";
         b2CircleShape circle;
@@ -29,9 +28,9 @@ Bumper::Bumper(SceneElement* root, b2World& world, int layerID, int shapeID, flo
     }
     else {
 		if (shapeID < 4)
-			m_sound->loadFromFile("data/bumper3.wav");
+			m_soundId = g_sound->getId("bumper3");
 		else
-			m_sound->loadFromFile("data/bumper2.wav");
+			m_soundId = g_sound->getId("bumper2");
         float startX = m_centers.at(shapeID).at(0);
         float startY = m_centers.at(shapeID).at(1);
         m_bumpForce = 15.0 * g_displayFrameRate / 60;
@@ -104,13 +103,6 @@ Bumper::Bumper(SceneElement* root, b2World& world, int layerID, int shapeID, flo
 }
 
 void Bumper::update() {
-	for (size_t i = 0; i < m_sounds.size(); i++) {
-		if (m_sounds.at(i)->getStatus() == SoundSource::Status::Stopped) {
-			Sound* sound = m_sounds.at(i);
-			m_sounds.erase(m_sounds.begin() + i);
-			delete sound;
-		}
-	}
     if (m_lockDelayCurrent < m_lockDelay) {
         m_lockDelayCurrent++;
     }
@@ -140,12 +132,7 @@ b2Body* Bumper::getBody() {
 }
 
 void Bumper::setHit() {
-	if (!g_muted) {
-		Sound* sound = new Sound();
-		sound->setBuffer(*m_sound);
-		sound->play();
-		m_sounds.push_back(sound);
-	}
+	g_sound->playSound(m_soundId);
 #if !DEBUG
     m_elt1->setLayer(-99);
     m_elt2->setLayer(m_layerID * 2 + 1);

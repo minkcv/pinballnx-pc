@@ -21,7 +21,7 @@ InfoScreen::InfoScreen(SceneElement* root) {
 	m_font = new Font();
 	m_font->loadFromFile("data/texgyreheros-regular.ttf");
     vector<string> infoText = {
-        "PINBALLNX  BY  MINKCV - VERSION  1.0"
+        "PINBALLNX  BY  MINKCV - VERSION  1.1"
 	};
     for (size_t t = 0; t < infoText.size(); t++) {
         Text* text = new Text();

@@ -82,10 +82,13 @@ int main(int argc, char **argv) {
     bool paused = true;
     bool pauseReleased = true;
 	bool focused = true;
-	window->requestFocus();
     // main loop
     while (true) {
 		Event event;
+
+		// Without setting event, it can be unset and be a close event
+		// This is a very intermittent bug and I don't know why it's happening.
+		event.type = Event::EventType::GainedFocus;
 		window->pollEvent(event);
 		if (event.type == Event::LostFocus)
 			focused = false;
@@ -93,8 +96,9 @@ int main(int argc, char **argv) {
 			focused = true;
 		if (event.type == Event::Closed)
 			break;
-		if (!focused)
+		if (!focused) {
 			continue;
+		}
         if (Keyboard::isKeyPressed(Keyboard::Escape)) {
             break;
         }

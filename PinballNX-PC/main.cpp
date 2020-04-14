@@ -82,11 +82,11 @@ int main(int argc, char **argv) {
     bool paused = true;
     bool pauseReleased = true;
 	bool focused = true;
+	window->requestFocus();
     // main loop
     while (true) {
 		Event event;
 		window->pollEvent(event);
-
 		if (event.type == Event::LostFocus)
 			focused = false;
 		if (event.type == Event::GainedFocus)

@@ -50,15 +50,18 @@ Spinner::Spinner(SceneElement* root, b2World& world, int layerID, int spinnerID)
 void Spinner::update() {
 	if (m_push != 0) {
 		if (m_playing == nullptr || m_playing->getStatus() != SoundSource::Status::Playing)
-			m_playing = g_sound->playSound(m_soundId);
+			m_playing = g_sound->playSound(m_soundId, true);
 		if (m_playing != nullptr) {
 			m_playing->setLoop(true);
 			m_playing->setPitch(abs(m_push / 400.0));
 		}
 	}
 	else {
-		if (m_playing != nullptr)
+		if (m_playing != nullptr && m_playing->getStatus() != SoundSource::Status::Stopped) {
 			m_playing->stop();
+			delete m_playing; 
+			m_playing = nullptr;
+		}
 	}
     if (m_push > 0) {
         m_push -= ceil(m_push + 1) / 10;

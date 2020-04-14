@@ -19,13 +19,14 @@ void SoundM::update() {
 	}
 }
 
-Sound* SoundM::playSound(int id) {
+Sound* SoundM::playSound(int id, bool loop) {
 	if (m_muted)
 		return nullptr;
 	Sound* playing = new Sound();
 	playing->setBuffer(*m_soundBuffers.at(id));
 	playing->play();
-	m_playing.push_back(playing);
+	if (!loop)
+		m_playing.push_back(playing);
 	return playing;
 }
 

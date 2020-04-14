@@ -11,7 +11,7 @@ class SoundM {
 public:
 	SoundM();
 	void update();
-	Sound* playSound(int id);
+	Sound* playSound(int id, bool loop = false);
 	int getId(string name);
 	void toggleMute();
 private:

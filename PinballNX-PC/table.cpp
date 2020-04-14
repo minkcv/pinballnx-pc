@@ -441,11 +441,10 @@ void Table::update() {
 #if !DEBUG
             m_tiltPosition = leftOrRight * 2;
 #endif
-#ifdef __SWITCH__
-            m_root->move(0, m_tiltPosition);
-#else
-            m_root->getSFObj()->move(m_tiltPosition, 0);
-#endif
+			if (m_root->getSFObj()->getRotation() != 0)
+				m_root->getSFObj()->move(m_tiltPosition, 0);
+			else
+				m_root->getSFObj()->move(0, m_tiltPosition);
             m_tiltTimer = 0;
             for (size_t p = 0; p < m_pinballs.size(); p++) {
                 Pinball* pinball = m_pinballs.at(p);
@@ -462,11 +461,10 @@ void Table::update() {
     }
     else {
         m_tiltTimer++;
-#ifdef __SWITCH__
-        m_root->move(0, -m_tiltPosition);
-#else
-        m_root->getSFObj()->move(-m_tiltPosition, 0);
-#endif
+		if (m_root->getSFObj()->getRotation() != 0)
+			m_root->getSFObj()->move(-m_tiltPosition, 0);
+		else
+			m_root->getSFObj()->move(0, -m_tiltPosition);
         m_tiltPosition = 0;
     }
 

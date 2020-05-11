@@ -430,7 +430,7 @@ void Table::update() {
         }
         wheel->update();
     }
-    if (m_tiltTimer == m_tiltCooldown || !DEBUG) {
+    if (m_tiltTimer == m_tiltCooldown || DEBUG) {
 		double leftOrRight = 0;
 		if (Keyboard::isKeyPressed(Keyboard::Slash))
 			leftOrRight = -4.0;
@@ -438,7 +438,7 @@ void Table::update() {
 			leftOrRight = 4.0;
 			
         if (leftOrRight != 0) {
-#if DEBUG
+#if !DEBUG
             m_tiltPosition = leftOrRight * 2;
 #endif
 			if (m_root->getSFObj()->getRotation() != 0)
@@ -449,7 +449,7 @@ void Table::update() {
             for (size_t p = 0; p < m_pinballs.size(); p++) {
                 Pinball* pinball = m_pinballs.at(p);
                 if (pinball != nullptr) {
-#if !DEBUG
+#if DEBUG
                     b2Vec2 vec(1.0, leftOrRight / 4.0);
 #else
                     b2Vec2 vec(8.0, leftOrRight);

@@ -174,11 +174,11 @@ Table::Table(SceneElement* root, b2World& world) :
 
     // Under layer bumpers
     // Circle bumpers
-    Bumper* bumper4 = new Bumper(root, world, 0, -1, 4.6, 2.4);
-    m_bumpers.push_back(bumper4);
-
-    Bumper* bumper5 = new Bumper(root, world, 0, -1, 5.30, 3.30);
-    m_bumpers.push_back(bumper5);
+    //Bumper* bumper4 = new Bumper(root, world, 0, -1, 4.6, 2.4);
+    //m_bumpers.push_back(bumper4);
+	
+    //Bumper* bumper5 = new Bumper(root, world, 0, -1, 5.30, 3.30);
+    //m_bumpers.push_back(bumper5);
 
     //Bumper* bumper6 = new Bumper(root, world, 0, -1, 5.5, 3.5);
     //m_bumpers.push_back(bumper6);
@@ -240,6 +240,9 @@ Table::Table(SceneElement* root, b2World& world) :
 
     Wheel* wheel1 = new Wheel(root, world, 0);
     m_wheels.push_back(wheel1);
+
+	Wheel* wheel2 = new Wheel(root, world, 1);
+	m_wheels.push_back(wheel2);
 
     Pinball* firstPinball = new Pinball(root, &world);
     m_pinballs.push_back(firstPinball);

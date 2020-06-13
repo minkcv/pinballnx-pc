@@ -2,6 +2,7 @@
 
 Wheel::Wheel(SceneElement* root, b2World& world, int wheelID) {
 	m_soundId = g_sound->getId("wheel");
+	m_wheelID = wheelID;
 
     m_radius = m_radii.at(wheelID);
     m_x = m_positions.at(wheelID * 2);
@@ -25,6 +26,11 @@ Wheel::Wheel(SceneElement* root, b2World& world, int wheelID) {
     fd.shape = &circleShape;
     fd.filter.maskBits = 1 << 2;
     fd.filter.categoryBits = 1 << 2;
+	int layerID = 2;
+	if (wheelID == 1)
+		layerID = 0;
+	fd.filter.maskBits = 1 << layerID;
+	fd.filter.categoryBits = 1 << layerID;
     m_pivot->CreateFixture(&fd);
 
     bd.type = b2_dynamicBody;
@@ -64,11 +70,14 @@ Wheel::Wheel(SceneElement* root, b2World& world, int wheelID) {
     renderer->add(m_cshape);
 #else
 	Texture* texture = new Texture();
-	texture->loadFromFile("data/wheel" + to_string(wheelID) + ".png");
+	texture->loadFromFile("data/wheel" + to_string(0) + ".png");
 	Sprite* sprite = new Sprite();
 	sprite->setTexture(*texture);
 	m_elt = new SceneElement(sprite);
-    m_elt->setLayer(4);
+	if (wheelID == 0)
+		m_elt->setLayer(4);
+	else
+		m_elt->setLayer(1);
     m_elt->getSFObj()->setOrigin(m_radius, m_radius);
     m_elt->getSFObj()->setPosition(m_x * g_graphicsScale, m_y * g_graphicsScale);
     root->add(m_elt);
@@ -84,20 +93,24 @@ void Wheel::update() {
     b2Vec2 position = m_body->GetPosition();
     float32 angle = m_body->GetAngle();
 
-    // Only apply a slow to the wheel when no pinballs are on it.
-    if (m_pinballsTouching > 0 && m_pushTimer == 0)
-        m_pushTimer = m_pushTime; // Keep pushing
+	if (m_wheelID == 1)
+		m_body->SetAngularVelocity(10);
+	else {
+		// Only apply a slow to the wheel when no pinballs are on it.
+		if (m_pinballsTouching > 0 && m_pushTimer == 0)
+			m_pushTimer = m_pushTime; // Keep pushing
 
-    if (m_pushTimer == 0)
-        m_body->ApplyTorque(-m_body->GetAngularVelocity() / 200, true);
-    else {
-        m_pushTimer--;
-        if (m_pushTimer < m_pushTime / 2) {
-            float vel = m_body->GetAngularVelocity();
-            if (abs(vel) < 2)
-                m_body->ApplyTorque(2, true);
-        }
-    }
+		if (m_pushTimer == 0)
+			m_body->ApplyTorque(-m_body->GetAngularVelocity() / 200, true);
+		else {
+			m_pushTimer--;
+			if (m_pushTimer < m_pushTime / 2) {
+				float vel = m_body->GetAngularVelocity();
+				if (abs(vel) < 2)
+					m_body->ApplyTorque(2, true);
+			}
+		}
+	}
 #if DEBUG
     m_cshape->setPosition(position.x * g_graphicsScale, position.y * g_graphicsScale);
     m_cshape->setRotation(angle * 180 / M_PI);
@@ -109,12 +122,14 @@ void Wheel::update() {
     m_elt->getSFObj()->setPosition(position.x * g_graphicsScale, position.y * g_graphicsScale);
     m_elt->getSFObj()->setRotation(angle * 180 / M_PI);
 #endif
-    if ((int)angle % m_angleSection != (int)m_anglePrev % m_angleSection)
-        m_sectionChanged = true;
-    else
-        m_sectionChanged = false;
-	if (m_sectionChanged) {
-		g_sound->playSound(m_soundId);
+	if (m_wheelID != 1) {
+		if ((int)angle % m_angleSection != (int)m_anglePrev % m_angleSection)
+			m_sectionChanged = true;
+		else
+			m_sectionChanged = false;
+		if (m_sectionChanged) {
+			g_sound->playSound(m_soundId);
+		}
 	}
     m_anglePrev = angle;
 }
